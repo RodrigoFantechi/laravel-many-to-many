@@ -13,7 +13,9 @@
         @endif
         <form action="{{ route('admin.projects.store') }}" method="post" class="card p-3" enctype="multipart/form-data">
             @csrf
+
             {{-- SEPARATORE --}}
+
             <div class="mb-3">
                 <label for="title" class="form-label">Title <strong class="text-danger">*</strong></label>
                 <input type="text" name="title" id="title"
@@ -23,7 +25,9 @@
             @error('title')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
+
             {{-- SEPARATORE --}}
+
             <div class="mb-3">
                 <label for="type_id" class="form-label">Type</label>
                 <select class="form-select form-select-lg @error('type_id') is-invalid @enderror" name="type_id"
@@ -38,19 +42,23 @@
             @error('type_id')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
+
             {{-- SEPARATORE --}}
+
             <div class="mb-3">
               <label for="technologies" class="form-label">City</label>
               <select multiple class="form-select form-select-lg" name="technologies[]" id="technologies">
                     <option value="" disabled>Select one</option>
                    @forelse ($technologies as $technology)
-                   <option value="{{$technology->id}}">{{$technology->name}}</option>
+                   <option value="{{$technology->id}}"{{in_array($technology->id, old('technologies', [])) ? 'selected' : ''}} >{{$technology->name}}</option>
                    @empty
                    <h6>Sorry.No technologies inside the database yet.</h6>  
                    @endforelse
                 </select>
             </div>
+
             {{-- SEPARATORE --}}
+
             <div class="form-group">
                 <label for="cover_image">Cover Image</label>
                 <input type="file" class="form-control" name="cover_image" id="cover_image"
@@ -60,7 +68,9 @@
             @error('cover')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
+
             {{-- SEPARATORE --}}
+
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
@@ -69,6 +79,7 @@
             @error('description')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
+
             {{-- SEPARATORE --}}
 
 
