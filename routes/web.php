@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->name('admin.')->prefix('admin')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('projects', ProjectController::class)->parameters([
         'projects' => 'project:slug'
     ]);
