@@ -56,6 +56,9 @@
                    @endforelse
                 </select>
             </div>
+            @error('technologies')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
 
             {{-- SEPARATORE --}}
 
