@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Type;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProjectController extends Controller
 {
@@ -17,8 +19,8 @@ class ProjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $projects = Project::orderByDesc('id')->get();
+    { 
+        $projects = Auth::user()->projects;
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -48,8 +50,12 @@ class ProjectController extends Controller
             $img_path = Storage::disk('public')->put('uploads', $request['cover_image']);
             $val_data['cover_image'] =   $img_path;
         }
+
         $slug_data = Project::createSlug($val_data['title']);
         $val_data['slug'] =  $slug_data;
+
+        $val_data['user_id'] = Auth::id();
+
         $project = Project::create($val_data);
         if ($request->has('technologies')) {
             $project->technologies()->attach($val_data['technologies']);
@@ -66,9 +72,13 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-       
-        // dd($project);
+       if (Auth::id() == $project['user_id']){
         return view('admin.projects.show', compact('project'));
+       }
+       else{
+        return redirect()->route('admin.projects.index')->with('message', "non sei autorizzato a vedere questo contenuto");
+        
+       }
     }
 
     /**
@@ -79,9 +89,14 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        if (Auth::id() == $project['user_id']){
         $technologies = Technology::all();
         $types = Type::all();
         return view('admin.projects.edit', compact('project', 'types', 'technologies'));
+        }
+        else{
+            return redirect()->route('admin.projects.index')->with('message', "non sei autorizzato a modificare questo contenuto");
+           }
     }
 
     /**
@@ -93,7 +108,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-
+        if (Auth::id() == $project['user_id']){
         $val_data = $request->validated();
 
         if($request['cover_image']){
@@ -113,10 +128,11 @@ class ProjectController extends Controller
         } else {
             $project->technologies()->sync([]);
         }
-
-
-
         return redirect()->route('admin.projects.index')->with('message', "$project->title update successfully");
+
+    }else{
+        return redirect()->route('admin.projects.index')->with('message', "non sei autorizzato a salvare questo contenuto");
+           }
     }
 
     /**
@@ -127,11 +143,15 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (Auth::id() == $project['user_id']){
         if ($project['cover_image']) {
             Storage::disk('public')->delete($project->cover_image);
         }
         $project->delete();
 
         return redirect()->route('admin.projects.index')->with('message', "$project->title deleted successfully");
+    }else{
+        return redirect()->route('admin.projects.index')->with('message', "non sei autorizzato a cancellare questo contenuto");
+       }
     }
 }

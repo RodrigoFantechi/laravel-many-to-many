@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                @foreach($projects as $project)
+                @forelse($projects as $project)
                 <tr class="table-primary">
                     <td>{{$project->id}}</td>
                     <td>
@@ -76,7 +76,11 @@
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td>No posts in the databese yet</td>
+                </tr>
+                @endforelse
 
             </tbody>
             <tfoot>
