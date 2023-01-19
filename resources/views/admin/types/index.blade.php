@@ -30,7 +30,7 @@
                     <td>{{$type->slug}}</td>
                     <td width='150'>
                         <div class="actions">
-                            <a href="{{route('admin.types.show', $type->slug)}}" class="btn bg-primary"><i class="fas fa-eye fa-md text-light"></i></a>
+                        
                             <a href="{{route('admin.types.edit', $type->slug)}}" class="btn bg-secondary my-1"><i class="fas fa-pencil fa-md text-light"></i></a>
 
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteType-{{$type->slug}}">
